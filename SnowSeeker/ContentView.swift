@@ -50,7 +50,9 @@ struct ContentView: View {
             }
             .navigationTitle("Resorts")
         } detail: {
-            Text("Detail")
+            // This is enough for SwiftUI to only show the WelcomeView when first running the app.
+            // It is nice to test on several different devices, both in portrait and landscape. On iPad, you might see different things depending on the device orientation and whether the app has all the screen or just half the screen (split screen).
+            WelcomeView()
         }
     }
 }
