@@ -6,8 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		964534C32CC75A670060E6BA /* ResortView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964534C22CC75A670060E6BA /* ResortView.swift */; };
+		964534C52CC75C740060E6BA /* SkiDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964534C42CC75C740060E6BA /* SkiDetailsView.swift */; };
+		964534C72CC75DCA0060E6BA /* ResortDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964534C62CC75DCA0060E6BA /* ResortDetailsView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		960369C22CC5FB7C00917081 /* SnowSeeker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnowSeeker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		964534C22CC75A670060E6BA /* ResortView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResortView.swift; sourceTree = "<group>"; };
+		964534C42CC75C740060E6BA /* SkiDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkiDetailsView.swift; sourceTree = "<group>"; };
+		964534C62CC75DCA0060E6BA /* ResortDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResortDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +41,9 @@
 		960369B92CC5FB7C00917081 = {
 			isa = PBXGroup;
 			children = (
+				964534C22CC75A670060E6BA /* ResortView.swift */,
+				964534C42CC75C740060E6BA /* SkiDetailsView.swift */,
+				964534C62CC75DCA0060E6BA /* ResortDetailsView.swift */,
 				960369C42CC5FB7C00917081 /* SnowSeeker */,
 				960369C32CC5FB7C00917081 /* Products */,
 			);
@@ -119,6 +131,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				964534C52CC75C740060E6BA /* SkiDetailsView.swift in Sources */,
+				964534C72CC75DCA0060E6BA /* ResortDetailsView.swift in Sources */,
+				964534C32CC75A670060E6BA /* ResortView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
