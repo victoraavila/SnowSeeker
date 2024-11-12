@@ -23,6 +23,11 @@ struct Resort: Codable, Hashable, Identifiable {
     var runs: Int
     var facilities: [String]
     
+    // Make a new Facility from each name inside our facilities [String]
+    var facilityTypes: [Facility] {
+        facilities.map(Facility.init)
+    }
+    
     // It's a good idea to have example data here in the model so it's easier to show working data on designs and previews.
     // We will use the Bundle-Decodable extension for Project 8 in order to load real data from the resorts.json instead of filling manually.
     

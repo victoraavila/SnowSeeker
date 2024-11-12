@@ -26,6 +26,9 @@ struct ResortView: View {
     // Detect the Dynamic Type size
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     
+    @State private var selectedFacility: Facility? // This is Optional, so we can't use it as the only title for our Alert. We'll have to use nil coalescing. We also always want to make sure that the Alert reads from selectedFacility, so it passes in the unwrapped value from there.
+    @State private var showingFacility = false
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) { // Spacing set to 0 so it'll be nice and tight
@@ -64,8 +67,22 @@ struct ResortView: View {
                     
                     // Previously we used the format parameter of Text to control the way numbers are formatted. There is a format for String Arrays too.
                     // This is similar to using .joined(separator:), but rather than getting back "A, B, C" we get back "A, B and C", which is more natural to read.
-                    Text(resort.facilities, format: .list(type: .and)) // This type: .and is what appears in the final String (we could also use .or).
-                        .padding(.vertical)
+                    //Text(resort.facilities, format: .list(type: .and)) // This type: .and is what appears in the final String (we could also use .or).
+                        //.padding(.vertical)
+                    
+                    // Loop over each facility icon and displaying it
+                    HStack {
+                        ForEach(resort.facilityTypes) { facility in
+                            Button {
+                                selectedFacility = facility
+                                showingFacility = true
+                            } label: {
+                                facility.icon
+                                    .font(.title) // Nice and large icon
+                            }
+                        }
+                    }
+                    .padding(.vertical)
                 }
                 .padding(.horizontal) // So the whole group get the same padding
                 
@@ -74,6 +91,12 @@ struct ResortView: View {
         }
         .navigationTitle("\(resort.name), \(resort.country)")
         .navigationBarTitleDisplayMode(.inline)
+        // presenting: is set so it unwraps the value of selectedFacility if we need it.
+        // The alert won't be shown if selectedFacility can't be unwrapped.
+        .alert(selectedFacility?.name ?? "More information", isPresented: $showingFacility, presenting: selectedFacility) { _ in // We don't want the unwrapped selectedFacility
+        } message: { facility in // Here we want the unwrapped selectedFacility
+            Text(facility.description)
+        }
     }
 }
 
