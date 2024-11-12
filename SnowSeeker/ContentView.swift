@@ -18,6 +18,17 @@ struct ContentView: View {
     // Using the Bundle extension to add a property that loads all our Resort into a single Array.
     let resorts: [Resort] = Bundle.main.decode("resorts.json")
     
+    @State private var searchText = ""
+    
+    var filteredResorts: [Resort] {
+        if searchText.isEmpty {
+            resorts
+        } else {
+            resorts.filter { $0.name.localizedStandardContains(searchText) } // Only values that pass the test of our choosing will be returned.
+            // .localizedStandardContains() is the preferred way of filtering user searches (ignores casing, accents and diacritics).
+        }
+    }
+    
     var body: some View {
         // A NavigationSplitView with a List inside of it to show all our resorts
         // In each row, there is a small flag of which country the resort is, the name of the resort and how many runs it has
@@ -25,7 +36,7 @@ struct ContentView: View {
         // A custom shape and stroked overlay will be used to make it look better on screen.
         // When it is tapped, we'll push to a DetailView showing more information about the resort.
         NavigationSplitView {
-            List(resorts) { resort in
+            List(filteredResorts) { resort in
                 NavigationLink(value: resort) {
                     HStack {
                         Image(resort.country)
@@ -53,6 +64,7 @@ struct ContentView: View {
             .navigationDestination(for: Resort.self) { resort in
                 ResortView(resort: resort) // Call ResortView with the resort that was chosen
             }
+            .searchable(text: $searchText, prompt: "Search for a resort") // prompt is what appears when the box is empty
         } detail: {
             // This is enough for SwiftUI to only show the WelcomeView when first running the app.
             // It is nice to test on several different devices, both in portrait and landscape. On iPad, you might see different things depending on the device orientation and whether the app has all the screen or just half the screen (split screen).
@@ -60,6 +72,13 @@ struct ContentView: View {
         }
     }
 }
+
+// Before the List in ContentView is done, we'll add a new SwiftUI modifier called .searchable().
+// Adding this will allow users to filter the list of resorts being shown, making it easy to find the exact thing they are looking for.
+// 1. Add an @State property to store the text the user is currently searching for;
+// 2. Bind the property to our List in ContentView by using .searchable() right below .navigationDestination(for:);
+// 3. Add a computed property to handle the filtering of our data (if searchText is empty, return everything; otherwise use .localizedStandardContains() to filter the Array based on their search criteria).
+// 4. Use filteredResorts as the data source for our List.
 
 #Preview {
     ContentView()
