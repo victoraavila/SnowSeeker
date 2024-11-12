@@ -26,6 +26,9 @@ struct ResortView: View {
     // Detect the Dynamic Type size
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     
+    // Read the Favorites object so the user can choose if they want to make this resort a favorite or not
+    @Environment(Favorites.self) var favorites
+    
     @State private var selectedFacility: Facility? // This is Optional, so we can't use it as the only title for our Alert. We'll have to use nil coalescing. We also always want to make sure that the Alert reads from selectedFacility, so it passes in the unwrapped value from there.
     @State private var showingFacility = false
     
@@ -86,7 +89,16 @@ struct ResortView: View {
                 }
                 .padding(.horizontal) // So the whole group get the same padding
                 
-                
+                // Add or remove this Resort from the user's Favorites by pressing a Button
+                Button(favorites.contains(resort) ? "Remove from Favorites" : "Add to Favorites") {
+                    if favorites.contains(resort) {
+                        favorites.remove(resort)
+                    } else {
+                        favorites.add(resort)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .padding()
             }
         }
         .navigationTitle("\(resort.name), \(resort.country)")
@@ -102,4 +114,6 @@ struct ResortView: View {
 
 #Preview {
     ResortView(resort: .example) // The example data made earlier.
+        // Inject the Favorites object so it won't crash
+        .environment(Favorites())
 }

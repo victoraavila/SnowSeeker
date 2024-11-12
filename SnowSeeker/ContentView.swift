@@ -18,6 +18,8 @@ struct ContentView: View {
     // Using the Bundle extension to add a property that loads all our Resort into a single Array.
     let resorts: [Resort] = Bundle.main.decode("resorts.json")
     
+    @State private var favorites = Favorites()
+    
     @State private var searchText = ""
     
     var filteredResorts: [Resort] {
@@ -56,6 +58,15 @@ struct ContentView: View {
                             Text("\(resort.runs) runs")
                                 .foregroundStyle(.secondary) // This is not quite so important
                         }
+                        
+                        // Display a heart for the user's favorite Resorts.
+                        if favorites.contains(resort) {
+                            Spacer() // To put our Views to one side
+                            
+                            Image(systemName: "heart.fill")
+                                .accessibilityLabel("This is a favorite resort")
+                                .foregroundStyle(.red)
+                        }
                     }
                 }
             }
@@ -70,6 +81,8 @@ struct ContentView: View {
             // It is nice to test on several different devices, both in portrait and landscape. On iPad, you might see different things depending on the device orientation and whether the app has all the screen or just half the screen (split screen).
             WelcomeView()
         }
+        // Inject our Favorites instance into the Environment, so every View gets the exact same object
+        .environment(favorites)
     }
 }
 
