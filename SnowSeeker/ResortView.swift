@@ -35,9 +35,19 @@ struct ResortView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) { // Spacing set to 0 so it'll be nice and tight
-                Image(decorative: resort.id) // This is decorative (it won't be read by VoiceOver).
-                    .resizable()
-                    .scaledToFit()
+                ZStack(alignment: .bottomTrailing) {
+                    Image(decorative: resort.id) // This is decorative (it won't be read by VoiceOver).
+                        .resizable()
+                        .scaledToFit()
+                    
+                    Text("© \(resort.imageCredit)")
+                        .font(.caption)
+                        .foregroundStyle(Color(.darkGray))
+                        .shadow(color: .white, radius: 1)
+                        .padding(.trailing, 5)
+                        .padding(.bottom, 5)
+                        
+                }
                 
                 // We could put all the following information on a HStack, but it would restrict what we can do in the future
                 // So, we will split it into 2 Views: one for resort information (price and size) and one for ski information (elevation and snow depth).
