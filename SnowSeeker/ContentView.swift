@@ -23,13 +23,33 @@ struct ContentView: View {
     @State private var searchText = ""
     
     var filteredResorts: [Resort] {
+        var sortedResorts = resorts
+        switch selectedSorting {
+        case "Alphabetical order":
+            sortedResorts = resorts.sorted { (lhs: Resort, rhs: Resort) -> Bool in
+                return lhs.name < rhs.name
+            }
+        case "Country order":
+            sortedResorts = resorts.sorted { (lhs: Resort, rhs: Resort) -> Bool in
+                if lhs.country == rhs.country {
+                    return lhs.name < rhs.name  // Secondary sort by name when countries are equal
+                }
+                return lhs.country < rhs.country
+            }
+        default:
+            sortedResorts = resorts
+        }
+        
         if searchText.isEmpty {
-            resorts
+            return sortedResorts
         } else {
-            resorts.filter { $0.name.localizedStandardContains(searchText) } // Only values that pass the test of our choosing will be returned.
+            return sortedResorts.filter { $0.name.localizedStandardContains(searchText) } // Only values that pass the test of our choosing will be returned.
             // .localizedStandardContains() is the preferred way of filtering user searches (ignores casing, accents and diacritics).
         }
     }
+    
+    let sorters = ["Default order", "Alphabetical order", "Country order"]
+    @State private var selectedSorting = "Default order"
     
     var body: some View {
         // A NavigationSplitView with a List inside of it to show all our resorts
@@ -38,39 +58,60 @@ struct ContentView: View {
         // A custom shape and stroked overlay will be used to make it look better on screen.
         // When it is tapped, we'll push to a DetailView showing more information about the resort.
         NavigationSplitView {
-            List(filteredResorts) { resort in
-                NavigationLink(value: resort) {
-                    HStack {
-                        Image(resort.country)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40, height: 25)
-                            .clipShape(.rect(cornerRadius: 5))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(.black, lineWidth: 1)
-                            )
-                        
-                        VStack(alignment: .leading) {
-                            Text(resort.name)
-                                .font(.headline)
+                List(filteredResorts) { resort in
+                    NavigationLink(value: resort) {
+                        HStack {
+                            Image(resort.country)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 40, height: 25)
+                                .clipShape(.rect(cornerRadius: 5))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(.black, lineWidth: 1)
+                                )
                             
-                            Text("\(resort.runs) runs")
-                                .foregroundStyle(.secondary) // This is not quite so important
-                        }
-                        
-                        // Display a heart for the user's favorite Resorts.
-                        if favorites.contains(resort) {
-                            Spacer() // To put our Views to one side
+                            VStack(alignment: .leading) {
+                                Text(resort.name)
+                                    .font(.headline)
+                                
+                                Text("\(resort.runs) runs")
+                                    .foregroundStyle(.secondary) // This is not quite so important
+                            }
                             
-                            Image(systemName: "heart.fill")
-                                .accessibilityLabel("This is a favorite resort")
-                                .foregroundStyle(.red)
+                            // Display a heart for the user's favorite Resorts.
+                            if favorites.contains(resort) {
+                                Spacer() // To put our Views to one side
+                                
+                                Image(systemName: "heart.fill")
+                                    .accessibilityLabel("This is a favorite resort")
+                                    .foregroundStyle(.red)
+                            }
                         }
                     }
                 }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    HStack {
+                        Text("Resorts")
+                            .font(.largeTitle) // Matches the navigation title font size
+                            .fontWeight(.bold) // Ensures a bold appearance
+                            .foregroundColor(.primary) // Adapts to light/dark mode
+                    }
+                    .padding(.vertical)
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu("Sort") {
+                        Picker("", selection: $selectedSorting) {
+                            ForEach(sorters, id: \.self) { sorter in
+                                Text(sorter)
+                            }
+                        }
+                    }
+                    .padding(.vertical)
+                }
             }
-            .navigationTitle("Resorts")
             // Pointing to our actual ResortView
             .navigationDestination(for: Resort.self) { resort in
                 ResortView(resort: resort) // Call ResortView with the resort that was chosen
